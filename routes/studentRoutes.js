@@ -17,6 +17,8 @@ studentRouter.post("/", async (req, res) => {
   }
 });
 
+//get the student
+
 //assigning or updating the mentor to an student
 
 studentRouter.put("/assignMentor/:studentId/:mentorId", async (req, res) => {
@@ -24,62 +26,57 @@ studentRouter.put("/assignMentor/:studentId/:mentorId", async (req, res) => {
 
   const student = await Student.findOne({ id: studentId });
 
-  if(!student.mentor.length) {
-
+  if (!student.mentor.length) {
     const mentorData = await Mentor.findOne({ id: mentorId });
 
     const assignMentor = await Student.updateOne(
       { id: studentId },
       { $set: { mentor: mentorData.name } }
     );
-  
+
     const updatedStudentData = await Student.findOne({ id: studentId });
-  
+
     res.json({
       message: `succesfully assigned the mentor ${updatedStudentData.mentor} to  student  ${updatedStudentData.name}`,
     });
-    
   }
-const oldName = student.mentor
-  if(student.mentor.length) {
-
+  const oldName = student.mentor;
+  if (student.mentor.length) {
     const mentorData = await Mentor.findOne({ id: mentorId });
 
     await Student.updateOne(
       { id: studentId },
       {
         $addToSet: {
-         
           previousMentor: oldName,
-          
         },
       }
     );
 
     const assignMentor = await Student.updateOne(
       { id: studentId },
-      { $set: { mentor:mentorData.name}}
+      { $set: { mentor: mentorData.name } }
     );
-  
+
     const updatedStudentData = await Student.findOne({ id: studentId });
-  
+
     res.json({
       message: `succesfully assigned the mentor ${updatedStudentData.mentor} to  student  ${updatedStudentData.name}`,
     });
-    
   }
-  
-  
-
 });
 
-// studentRouter.get("/", async (req, res) => {
-//   try {
-//   const fetchedData =   await Student.find({});
-//     res.status(200).json({ message: "student data fetched succesfully", data:fetchedData });
-//   } catch (err) {
-//     res.status(500).json({ message: "failed to fetch the student", err });
-//   }
-// });
+//get the student
+
+studentRouter.get("/", async (req, res) => {
+  try {
+    const fetchedData = await Student.find({});
+    res
+      .status(200)
+      .json({ message: "student data fetched succesfully", data: fetchedData });
+  } catch (err) {
+    res.status(500).json({ message: "failed to fetch the student", err });
+  }
+});
 
 export default studentRouter;
