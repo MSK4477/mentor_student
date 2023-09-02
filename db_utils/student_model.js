@@ -10,10 +10,8 @@ const studentSchema = new Schema({
   mentor: {
  type:[]
   },
-  previouslyAssignedMentor: {  
-       
-        type:[]
-}
+ previousMentor:[]
+
 });
 
 const Student = model("student", studentSchema);

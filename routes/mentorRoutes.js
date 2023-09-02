@@ -1,7 +1,7 @@
 import express from "express";
 import Mentor from "../db_utils/mentor_model.js";
 import Student from "../db_utils/student_model.js";
-// import {v4 } from "uuid"
+
 const mentorRouter = express.Router();
 
 // Create a mentor
@@ -14,26 +14,30 @@ mentorRouter.post("/", async (req, res) => {
       postedData: newMentor,
     });
   } catch (err) {
+    // Handle errors if mentor creation fails
     res.status(500).json({ message: "Failed to create a mentor", err });
   }
 });
+
+// Get a list of all mentors
 mentorRouter.get("/", async (req, res) => {
   try {
-    const mentors = await Mentor.find({})
+    const mentors = await Mentor.find({});
     res
       .status(200)
-      .json({ message: "student fetched succesfully", Data: mentors });
+      .json({ message: "Mentors fetched successfully", Data: mentors });
   } catch (err) {
-    res.status(500).json({ message: "failed to create an user", err });
+    // Handle errors if fetching mentors fails
+    res.status(500).json({ message: "Failed to fetch mentors", err });
   }
 });
-
 
 // Add students to the mentor
 mentorRouter.put("/addStudent/:studentId/:mentorId", async (req, res) => {
   const { studentId, mentorId } = req.params;
   try {
     const newStudent = await Student.findOne({ id: studentId });
+    const mentor = await Mentor.findOne({ id: mentorId });
 
     await Mentor.updateOne(
       { id: mentorId },
@@ -48,11 +52,13 @@ mentorRouter.put("/addStudent/:studentId/:mentorId", async (req, res) => {
     );
 
     res.status(200).json({
-      message: `Successfully assigned the student ${newStudent.name} to the mentor`,
+      message: `Successfully assigned the student ${newStudent.name} to the mentor ${mentor.name}`,
     });
   } catch (err) {
+    // Handle errors if student doesn't exist or if there's any other error
     res.status(500).json({
       message: `Student with the id: ${studentId} doesn't exist`,
+      err,
     });
   }
 });
@@ -67,6 +73,7 @@ mentorRouter.get("/:mentorId", async (req, res) => {
       data: fetchedData,
     });
   } catch (err) {
+    // Handle errors if fetching mentor data fails
     res.status(500).json({ message: "Failed to fetch the mentor", err });
   }
 });

@@ -11,7 +11,7 @@ app.get("/", function (req, res) {
   res.sendFile(path.resolve("public/index.html"));
 });
 await DbToConnect();
-const PORT = 4000;
+const PORT = 4002;
 
 app.use("/student", studentRouter);
 app.use("/mentor", mentorRouter);
