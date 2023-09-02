@@ -38,7 +38,12 @@ mentorRouter.put("/addStudent/:studentId/:mentorId", async (req, res) => {
   try {
     const newStudent = await Student.findOne({ id: studentId });
     const mentor = await Mentor.findOne({ id: mentorId });
-
+if(!newStudent){
+  res.status(500).json({ message: 'Student not found'})
+}
+if(!mentor){
+  res.status(500).json({ message: 'mentor not found'})
+}
     await Mentor.updateOne(
       { id: mentorId },
       {
