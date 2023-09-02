@@ -17,6 +17,17 @@ mentorRouter.post("/", async (req, res) => {
     res.status(500).json({ message: "Failed to create a mentor", err });
   }
 });
+mentorRouter.get("/", async (req, res) => {
+  try {
+    const mentors = await Mentor.find({})
+    res
+      .status(200)
+      .json({ message: "student fetched succesfully", Data: mentors });
+  } catch (err) {
+    res.status(500).json({ message: "failed to create an user", err });
+  }
+});
+
 
 // Add students to the mentor
 mentorRouter.put("/addStudent/:studentId/:mentorId", async (req, res) => {

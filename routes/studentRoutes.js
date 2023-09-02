@@ -4,6 +4,16 @@ import Mentor from "../db_utils/mentor_model.js";
 
 const studentRouter = express.Router();
 
+
+studentRouter.get("/", async (req, res) => {
+  try {
+    const students = await Student.find({});
+    res.status(200).json({ message: "Students fetched successfully", data: students });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to fetch students", err });
+  }
+});
+
 // Creating a student
 studentRouter.post("/", async (req, res) => {
   try {
@@ -11,26 +21,12 @@ studentRouter.post("/", async (req, res) => {
     await newStudent.save();
     res.status(200).json({
       message: "Student created successfully",
-      postedData: newStudent.name,
+      postedData: newStudent,
     });
   } catch (err) {
     res.status(500).json({ message: "Failed to create a student", err });
   }
 });
-
-//getting the students
-
-studentRouter.get("/", async (req, res) =>{
-try{
-  const studentDetails = await Student.find({})
-  res.status(200).json({message:"fetched all students detail", fetchedData:studentDetails})
-}catch(err){
-  res.status(500).json({message:"can't fetch the user get" , Error:err})
-}
-
-
-})
-
 
 // Assigning or updating the mentor for a student
 studentRouter.put("/assignMentor/:studentId/:mentorId", async (req, res) => {
@@ -43,13 +39,14 @@ studentRouter.put("/assignMentor/:studentId/:mentorId", async (req, res) => {
       res.status(404).json({ message: "Student not found" });
       return;
     }
-    const mentorData = await Mentor.findOne({ id: mentorId });
-    if (!mentorData) {
-      res.status(404).json({ message: "Mentor not found" });
-      return;
-    }
 
     if (!student.mentor.length) {
+      const mentorData = await Mentor.findOne({ id: mentorId });
+      if (!mentorData) {
+        res.status(404).json({ message: "Mentor not found" });
+        return;
+      }
+
       await Student.updateOne(
         { id: studentId },
         { $set: { mentor: mentorData.name } }
@@ -72,11 +69,10 @@ studentRouter.put("/assignMentor/:studentId/:mentorId", async (req, res) => {
         { id: studentId },
         {
           $addToSet: {
-            previouslyAssignedMentor: {
-              mentorName: oldName,
+            previouslyAssignedMentor:oldName,
             },
           },
-        }
+        
       );
 
       await Student.updateOne(

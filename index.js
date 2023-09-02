@@ -1,13 +1,17 @@
 import express from "express";
 import cors from "cors";
+import path from "path";
 import studentRouter from "./routes/studentRoutes.js";
 import mentorRouter from "./routes/mentorRoutes.js";
 import DbToConnect from "./db_utils/mongoose_connection.js";
 const app = express();
 app.use(express.json());
 app.use(cors());
+app.get("/", function (req, res) {
+  res.sendFile(path.resolve("public/index.html"));
+});
 await DbToConnect();
-const PORT = process.env.PORT || 4001;
+const PORT = 4000;
 
 app.use("/student", studentRouter);
 app.use("/mentor", mentorRouter);

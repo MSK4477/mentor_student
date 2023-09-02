@@ -8,11 +8,11 @@ const studentSchema = new Schema({
     type: "string",
   },
   mentor: {
-    type: [],
-
+ type:[]
   },
-  previouslyAssignedMentor: {
-    mentorName:[]
+  previouslyAssignedMentor: {  
+       
+        type:[]
 }
 });
 

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student and Mentor Form</title>
+</head>
+<body>
+    <h1>POST Call for creating student and Mentor</h1>
+    <div class="app-container">
+        <form id="student-form">
+            <label for="student-id">Student ID:</label>
+            <input type="text" id="student-id" name="id" required><br><br>
+            
+            <label for="student-name">Student Name:</label>
+            <input type="text" id="student-name" name="name" required><br><br>
+
+            <button type="submit">Add New Student</button>
+        </form>
+
+        <form id="mentor-form">
+            <label for="mentor-id">Mentor ID:</label>
+            <input type="text" id="mentor-id" name="id" required><br><br>
+            
+            <label for="mentor-name">Mentor Name:</label>
+            <input type="text" id="mentor-name" name="name" required><br><br>
+
+            <button type="submit">Add New Mentor</button>
+        </form>
+    </div> <br></br>
+
+<ul>
+
+    <h1>GET Call</h1>
+    <li><a href="https://mentor-student-axg4.onrender.com/student">student Details</a></li>
+    <li><a href="https://mentor-student-axg4.onrender.com/mentor">mentor Details</a></li>
+</ul>
+
+<ul>
+    <h1> this actions in postman </h1>
+
+    <li><h4>assigning mentor to student</h4></li>
+    <h6>https://mentor-student-axg4.onrender.com/student/assignMentor/:studentId/:mentorId",</h6>
+    <li><h4>assigning student to mentor</h4></li>
+    <h6>https://mentor-student-axg4.onrender.com/mentor/addStudent/:studentId/:mentorId</h6>
+    <li><h4>previous mentor data was automatically updated in student</h4></li>
+    <h4> details check it by get student details after assign the mentor to the student</h4>
+    <li><h4>https://mentor-student-axg4.onrender.com/mentor/:mentorId</h4></li>
+    <h6>to display particular mentor detail </h6>
+
+
+</ul>
+    <script>
+        const studentForm = document.getElementById("student-form");
+        const mentorForm = document.getElementById("mentor-form");
+  
+        studentForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    
+    const formData = {
+        id: document.getElementById("student-id").value,
+        name: document.getElementById("student-name").value
+    };
+
+    fetch("https://mentor-student-axg4.onrender.com/student", {
+        method: "POST",
+        body: JSON.stringify(formData),
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+    .then((response) => response.json())
+    .then((data) => {
+        alert("student data created succesfully")
+        studentForm.reset()
+    }) .catch((error) => {
+                console.error("Error:", error);
+            });
+
+});
+
+        mentorForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const formData = {
+                id: document.getElementById("mentor-id").value,
+                name: document.getElementById("mentor-name").value
+            };
+
+            fetch("https://mentor-student-axg4.onrender.com/mentor", {
+                method: "POST",
+                body: JSON.stringify(formData),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(`Mentor added successfully: ${data.message}`);
+                mentorForm.reset();
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+            });
+        });
+    </script>
+</body>
+</html>
