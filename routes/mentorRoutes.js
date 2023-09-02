@@ -27,7 +27,6 @@ mentorRouter.get("/", async (req, res) => {
       .status(200)
       .json({ message: "Mentors fetched successfully", Data: mentors });
   } catch (err) {
-    // Handle errors if fetching mentors fails
     res.status(500).json({ message: "Failed to fetch mentors", err });
   }
 });
