@@ -71,7 +71,7 @@ if(!mentor){
 mentorRouter.get("/:mentorId", async (req, res) => {
   const { mentorId } = req.params;
   try {
-    const fetchedData = await Mentor.find({ id: mentorId }, { students: 1 });
+    const fetchedData = await Mentor.find({ id: mentorId });
     res.status(200).json({
       message: "Mentor data fetched successfully",
       data: fetchedData,
